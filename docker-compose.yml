@@ -1,0 +1,36 @@
+version: '3.2'
+services:
+  java:
+    build:
+      context: ./Docker
+      dockerfile: java.dockerfile
+    image: andrew-openjdk
+    container_name: andrew_auction_java
+    working_dir: /usr/src/auction
+    volumes:
+      - type: bind
+        source: .
+        target: /usr/src/auction
+    ports:
+      - "8200:8100"
+    restart: always
+    stdin_open: true
+    tty: true
+    entrypoint:
+      - scripts/build.sh
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
