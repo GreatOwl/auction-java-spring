@@ -51,9 +51,9 @@ public class AuctionRepository {
     public void saveAuctionItem(AuctionItem auctionItem) {
         MongoCollection<Document> items = loadAuctionItems();
         ObjectMapper objectMapper = new ObjectMapper();
-        String auctionJson = "{}";
         try {
-            auctionJson = objectMapper.writeValueAsString(auctionItem);
+            String auctionJson = objectMapper.writeValueAsString(auctionItem);
+            items.insertOne(new Document("auctionItem", auctionJson));//objectMapper.writeValueAsString(auctionItem)));
         } catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (JsonGenerationException e) {
@@ -61,7 +61,5 @@ public class AuctionRepository {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        // items.insertOne(new Document("auctionItem", auctionJson));//objectMapper.writeValueAsString(auctionItem)));
     }
 }

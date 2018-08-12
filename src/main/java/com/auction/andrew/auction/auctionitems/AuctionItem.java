@@ -1,15 +1,12 @@
 package com.auction.andrew.auction.auctionitems;
 
-import java.io.IOException;
+
 import java.util.UUID;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Document(collection = "auctionItems")
 public class AuctionItem {
@@ -43,6 +40,19 @@ public class AuctionItem {
         return auctionId;
     }
 
+    @JsonSetter("auctionId")
+    public void setAuctionId(String auctionId) {
+        setAuctionId(UUID.fromString(auctionId));
+    }
+
+    private void setAuctionId(UUID auctionId) {
+        this.auctionId = auctionId;
+    }
+
+    public void setAuctionId() {
+        setAuctionId(UUID.randomUUID());
+    }
+
     public Double getCurrentBid() {
         return currentBid;
     }
@@ -65,25 +75,35 @@ public class AuctionItem {
         this.item = item;
     }
 
-    public AuctionItem() {}
+    public AuctionItem() {
+        setAuctionId();
+        this.currentBid = 0.00;
+    }
 
     public AuctionItem(UUID auctionId, Double currentBid, Double reservePrice, Item item) {
-        this.auctionId = auctionId;
+        setAuctionId(auctionId);
         this.currentBid = currentBid;
         this.reservePrice = reservePrice;
         this.item = item;
     }
     
     public AuctionItem(String auctionId, Double currentBid, Double reservePrice, String itemId, String description) {
-        this.auctionId = UUID.fromString(auctionId);
+        setAuctionId(auctionId);
         this.currentBid = currentBid;
         this.reservePrice = reservePrice;
         this.item = new Item(itemId, description);
     }
 
     public AuctionItem(Double currentBid, Double reservePrice, String itemId, String description) {
-        this.auctionId = UUID.randomUUID();
+        setAuctionId();
         this.currentBid = currentBid;
+        this.reservePrice = reservePrice;
+        this.item = new Item(itemId, description);
+    }
+
+    public AuctionItem(Double reservePrice, String itemId, String description) {
+        setAuctionId();
+        this.currentBid = 0.00;
         this.reservePrice = reservePrice;
         this.item = new Item(itemId, description);
     }
