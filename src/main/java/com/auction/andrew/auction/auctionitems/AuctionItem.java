@@ -2,21 +2,23 @@ package com.auction.andrew.auction.auctionitems;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 public class AuctionItem {
 
     public class Item {
         private String itemId;
         private String description;
-
+    
         public Item(String itemId, String description) {
             this.itemId = itemId;
             this.description = description;
         }
-
+    
         public String getItemId() {
             return itemId;
         }
-
+    
         public String getDescription() {
             return description;
         }
@@ -43,6 +45,7 @@ public class AuctionItem {
         return reservePrice;
     }
 
+    @JsonGetter("item")
     public Item gItem() {
         return item;
     }
