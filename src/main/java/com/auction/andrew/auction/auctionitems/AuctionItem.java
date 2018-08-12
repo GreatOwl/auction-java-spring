@@ -55,8 +55,8 @@ public class AuctionItem {
         this.item = item;
     }
     
-    public AuctionItem(UUID auctionId, Double currentBid, Double reservePrice, String itemId, String description) {
-        this.auctionId = UUID.randomUUID();
+    public AuctionItem(String auctionId, Double currentBid, Double reservePrice, String itemId, String description) {
+        this.auctionId = UUID.fromString(auctionId);
         this.currentBid = currentBid;
         this.reservePrice = reservePrice;
         this.item = new Item(itemId, description);
