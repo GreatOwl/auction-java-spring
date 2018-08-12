@@ -31,22 +31,22 @@ public class AuctionItem {
         }
     }
 
-    private UUID auctionId;
+    private UUID auctionItemId;
     private Double currentBid;
     private Double reservePrice;
     private Item item;
 
-    public String getAuctionId() {
-        return auctionId.toString();
+    public String getAuctionItemId() {
+        return auctionItemId.toString();
     }
 
-    @JsonSetter("auctionId")
+    @JsonSetter("auctionItemId")
     public void setAuctionId(String auctionId) {
         setAuctionId(UUID.fromString(auctionId));
     }
 
     private void setAuctionId(UUID auctionId) {
-        this.auctionId = auctionId;
+        this.auctionItemId = auctionId;
     }
 
     public void setAuctionId() {

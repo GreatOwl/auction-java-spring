@@ -69,7 +69,7 @@ public class AuctionRepository {
                     .append("description", auctionItem.getItem().getDescription())
                 )
                 .append("auctionItem", auctionJson)
-                .append("_id", auctionItem.getAuctionId())
+                .append("_id", auctionItem.getAuctionItemId())
             );//objectMapper.writeValueAsString(auctionItem)));
         } catch (JsonMappingException e) {
             e.printStackTrace();
