@@ -21,13 +21,20 @@ services:
 
   mongo:
     image: mongo
+    container_name: andrew_mongo
+    # if not on macOS reccommend only running in docker containers
+    # to operate on macOS host java instance, you must modify /etc/hosts to include:
+    # 127.0.0.1   andrew_mongo
     restart: always
+    ports:
+      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
 
   mongo-express:
     image: mongo-express
+    container_name: andrew_mongo_manager
     restart: always
     ports:
       - 8081:8081
