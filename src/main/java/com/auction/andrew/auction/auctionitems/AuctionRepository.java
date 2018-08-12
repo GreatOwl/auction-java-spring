@@ -21,8 +21,8 @@ public class AuctionRepository {
     private MongoDatabase mongoDatabase;
     
     @Autowired
-    public AuctionRepository(MongoDatabase mongoDatabase) {
-        this.mongoDatabase = mongoDatabase;
+    public AuctionRepository(AuctionClient client) {
+        this.mongoDatabase = client.getDatabase();
     }
 
     public MongoCollection<Document> loadAuctionItems() {

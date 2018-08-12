@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,14 +51,13 @@ public class AuctionController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // AuctionItem cat = new AuctionItem(0.00, 1000.00, "cat", "Furry feline mammal");
-        // AuctionItem dog = new AuctionItem(0.00, 1001.00, "cat", "Furry canine mammal");
+        
         return auctionRepository.getAuctionItems();
 	}
 
     @RequestMapping(value="/auctionItems/{auctionItemId}", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
     @ResponseBody
-	public AuctionItem getAuctionItem(@PathVariable String auctionItemId) {
+	public AuctionItem getAuctionItem(@PathVariable String auctionItemId, HttpServletRequest request) {
         return auctionRepository.getAuctionItem(auctionItemId);
     }
 }
