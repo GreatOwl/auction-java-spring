@@ -36,8 +36,8 @@ public class AuctionItem {
     private Double reservePrice;
     private Item item;
 
-    public UUID getAuctionId() {
-        return auctionId;
+    public String getAuctionId() {
+        return auctionId.toString();
     }
 
     @JsonSetter("auctionId")

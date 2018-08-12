@@ -58,7 +58,6 @@ public class AuctionController {
     @RequestMapping(value="/auctionItems/{auctionItemId}", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
     @ResponseBody
 	public AuctionItem getAuctionItem(@PathVariable String auctionItemId) {
-        AuctionItem item = new AuctionItem(auctionItemId, 0.00, 1000.00, "cat", "Furry feline mammal");
-        return item;
+        return auctionRepository.getAuctionItem(auctionItemId);
     }
 }
