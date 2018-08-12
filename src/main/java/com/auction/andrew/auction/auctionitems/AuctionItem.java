@@ -48,13 +48,19 @@ public class AuctionItem {
     }
 
 
-    protected AuctionItem(UUID auctionId, Double currentBid, Double reservePrice, Item item) {
+    public AuctionItem(UUID auctionId, Double currentBid, Double reservePrice, Item item) {
         this.auctionId = auctionId;
         this.currentBid = currentBid;
         this.reservePrice = reservePrice;
         this.item = item;
     }
     
+    public AuctionItem(UUID auctionId, Double currentBid, Double reservePrice, String itemId, String description) {
+        this.auctionId = UUID.randomUUID();
+        this.currentBid = currentBid;
+        this.reservePrice = reservePrice;
+        this.item = new Item(itemId, description);
+    }
 
     public AuctionItem(Double currentBid, Double reservePrice, String itemId, String description) {
         this.auctionId = UUID.randomUUID();
