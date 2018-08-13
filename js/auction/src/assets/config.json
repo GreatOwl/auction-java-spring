@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "bidders": {
+            "collection": "http://localhost:8100/bidders",
+            "item": "http://localhost:8100/bidders/:bidder"
+        }
+    },
+    "docker": {
+        "bidders": {
+            "collection": "http://localhost:8200/bidders",
+            "item": "http://localhost:8200/bidders/:bidder"
+        }
+    }
+}
