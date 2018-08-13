@@ -10,15 +10,12 @@ import org.springframework.boot.autoconfigure.*;
 @EnableAutoConfiguration
 public class AuctionApplication {
 
-	// @Override
 	public void configurePathMatch(PathMatchConfigurer configurer) {
 		configurer.setUseTrailingSlashMatch(false);
 	}
 
 	public static void main(String[] args) {
-		// SpringApplication app = new SpringApplication(AuctionApplication.class);
-		// app.setWebApplicationType(WebApplicationType.SERVLET);
 		SpringApplication.run(AuctionApplication.class, args);
-		
+
 	}
 }
