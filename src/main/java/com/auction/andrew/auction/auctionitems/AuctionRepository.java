@@ -6,27 +6,34 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.async.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import static com.mongodb.client.model.Filters.*;
 
 @Service
+@Primary
 public class AuctionRepository {
 
-    private MongoDatabase mongoDatabase;
+    private MongoDatabase mongoDb;
+    private ObjectMapper objectMapper;
     
     @Autowired
-    public AuctionRepository(AuctionClient client) {
-        this.mongoDatabase = client.getDatabase();
+    public AuctionRepository(MongoDatabase mongoDb, ObjectMapper objectMapper) {
+        this.mongoDb = mongoDb;
+        this.objectMapper = objectMapper;
+    }
+    private MongoDatabase getDatabase() {
+        return mongoDb;
     }
 
     public MongoCollection<Document> loadAuctionItems() {
-        return mongoDatabase.getCollection("auctionItems", Document.class);
+        return getDatabase().getCollection("auctionItems", Document.class);
     }
 
     public AuctionItem getAuctionItem(String auctionItemId) {
@@ -37,22 +44,30 @@ public class AuctionRepository {
 
     private ArrayList<AuctionItem> parseItems(Iterable<Document> documents) {
         ArrayList<AuctionItem> rawItems = new ArrayList<AuctionItem>();
-        ObjectMapper objectMapper = new ObjectMapper();
         for (Document document : documents) {
-            // document.values();
             try {
-                String json = document.getString("auctionItem");
-                AuctionItem item = objectMapper.readValue(json, AuctionItem.class);
+                AuctionItem item = parseAuctionItem(document.getString("auctionItem"));
                 rawItems.add(item);
             } catch (JsonMappingException e) {
-                e.printStackTrace();
-            } catch (JsonGenerationException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return rawItems;
+    }
+
+    private AuctionItem parseAuctionItem(String json) throws JsonMappingException {
+        try {
+            AuctionItem item = objectMapper.readValue(json, AuctionItem.class);
+            return item;
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (JsonGenerationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        throw new JsonMappingException("Failed to parse bidder");
     }
 
     public ArrayList<AuctionItem> getAuctionItems() {
@@ -60,17 +75,31 @@ public class AuctionRepository {
         return parseItems(documents.find());
     }
 
-    public void saveAuctionItem(AuctionItem auctionItem) {
+    public void updateAuctionItem(AuctionItem item) {
         MongoCollection<Document> items = loadAuctionItems();
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String auctionJson = objectMapper.writeValueAsString(auctionItem);
+            items.replaceOne(
+                eq("_id", item.getAuctionItemId()), 
+                new Document("auctionItem", objectMapper.writeValueAsString(item)));
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonGenerationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveAuctionItem(String json) {
+        MongoCollection<Document> items = loadAuctionItems();
+        try {
+            AuctionItem auctionItem = objectMapper.readValue(json, AuctionItem.class);
             items.insertOne(new Document("query", new Document("itemId", auctionItem.getItem().getItemId())
                     .append("description", auctionItem.getItem().getDescription())
                 )
-                .append("auctionItem", auctionJson)
+                .append("auctionItem", objectMapper.writeValueAsString(auctionItem))
                 .append("_id", auctionItem.getAuctionItemId())
-            );//objectMapper.writeValueAsString(auctionItem)));
+            );
         } catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (JsonGenerationException e) {

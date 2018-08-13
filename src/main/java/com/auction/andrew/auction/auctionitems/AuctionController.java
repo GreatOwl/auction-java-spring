@@ -1,12 +1,6 @@
 package com.auction.andrew.auction.auctionitems;
 
-
-import java.io.IOException;
 import java.util.ArrayList;
-
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,20 +32,7 @@ public class AuctionController {
     @RequestMapping(value="/auctionItems", method=RequestMethod.POST, produces="application/json;charset=UTF-8", consumes="application/json")
     @ResponseBody
 	public ArrayList<AuctionItem> addAuctionItems(@RequestBody String requestbodyString) {
-        
-        // request.getp
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            AuctionItem item = objectMapper.readValue(requestbodyString, AuctionItem.class);
-            auctionRepository.saveAuctionItem(item);
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
+        auctionRepository.saveAuctionItem(requestbodyString);
         return auctionRepository.getAuctionItems();
 	}
 

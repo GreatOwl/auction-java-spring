@@ -32,6 +32,7 @@ public class AuctionItem {
     }
 
     private UUID auctionItemId;
+    private UUID bidId;
     private Double currentBid;
     private Double reservePrice;
     private Item item;
