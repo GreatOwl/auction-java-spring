@@ -3,9 +3,11 @@ package com.auction.andrew.auction.bids;
 import com.auction.andrew.auction.auctionitems.AuctionItem;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BidValidator {
-    
+
     private BidRepository bidRepository;
 
     @Autowired
@@ -37,14 +39,14 @@ public class BidValidator {
 
     public void validateBest(BidInterface bid, BidInterface highestBid, AuctionItem item) {
         Double best = highestBid.getMaxAutoBidAmount() + 1;
-            Double newBest = bid.getMaxAutoBidAmount() + 1;
-            if (bid.getMaxAutoBidAmount() >= best) {
-                bidRepository.placeBid(best, item, bid);
-            } else if (highestBid.getMaxAutoBidAmount() >= newBest) {
-                bidRepository.placeHighestBid(newBest, bid.getMaxAutoBidAmount(), item, highestBid, bid);
-            } else if (highestBid.getMaxAutoBidAmount().compareTo(bid.getMaxAutoBidAmount()) == 0) {
-                Double lowAmount = bid.getMaxAutoBidAmount() - 1;
-                bidRepository.placeHighestBid(highestBid.getMaxAutoBidAmount(), lowAmount, item, highestBid, bid);
-            }
+        Double newBest = bid.getMaxAutoBidAmount() + 1;
+        if (bid.getMaxAutoBidAmount() >= best) {
+            bidRepository.placeBid(best, item, bid);
+        } else if (highestBid.getMaxAutoBidAmount() >= newBest) {
+            bidRepository.placeHighestBid(newBest, bid.getMaxAutoBidAmount(), item, highestBid, bid);
+        } else if (highestBid.getMaxAutoBidAmount().compareTo(bid.getMaxAutoBidAmount()) == 0) {
+            Double lowAmount = bid.getMaxAutoBidAmount() - 1;
+            bidRepository.placeHighestBid(highestBid.getMaxAutoBidAmount(), lowAmount, item, highestBid, bid);
+        }
     }
 }
